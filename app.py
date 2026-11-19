@@ -49,24 +49,24 @@ st.sidebar.header("Filtres")
 # Exemple déjà écrit : le filtre pays. Une liste vide veut dire « tous les pays ».
 pays = st.sidebar.multiselect("Pays déclaré", sorted(df["pays_declare"].unique()))
 
-# TODO FILTRE_CANAL (étape 3a) : sur le même modèle, un filtre « Canal de saisie » sur la colonne source_saisie.
+canal = st.sidebar.multiselect("Canal de saisie", sorted(df["source_saisie"].unique()))
 
-# TODO FILTRE_PERIODE (étape 3b) : un filtre « Période de saisie » avec st.sidebar.slider (voir le brief).
+debut, fin = st.sidebar.slider(
+    "Période de saisie",
+    min_value=df["date_saisie"].min().date(),
+    max_value=df["date_saisie"].max().date(),
+    value=(df["date_saisie"].min().date(), df["date_saisie"].max().date()),
+    format="DD/MM/YYYY",
+)
 
 # `selection` contient les lignes qui passent les filtres. Toute la suite utilise
 # `selection`, jamais `df` : c'est ce qui fait réagir la page aux filtres.
 selection = df
 if pays:
     selection = selection[selection["pays_declare"].isin(pays)]
-# TODO APPLIQUER_FILTRES (étape 3c) : appliquer le filtre canal et le filtre période à `selection`.
-#           Toujours `selection = selection[...]`, jamais `selection = df[...]`.
-
-# =============================================================================
-# ÉTAPE 6 — Rendre la page lisible par tous (à faire APRÈS l'étape 5)
-# =============================================================================
-st.title("Qualité du référentiel TVA")
-# TODO AIDE (étape 6a) : une phrase d'aide pour la directrice financière (st.write).
-# TODO DATE_REGLE (étape 6b) : la date de la dernière vérification VIES et la règle pour les non tranchés (st.info).
+if canal:
+    selection = selection[selection["source_saisie"].isin(canal)]
+selection = selection[selection["date_saisie"].dt.date.between(debut, fin)]
 
 # =============================================================================
 # ÉTAPE 1 — Les quatre chiffres clés
