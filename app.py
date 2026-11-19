@@ -143,8 +143,22 @@ st.caption(
 # ÉTAPE 5 — Les numéros à traiter
 # =============================================================================
 st.subheader("Numéros à traiter")
-# TODO A_TRAITER (étape 5) : la liste des invalides et des non tranchés, avec une colonne « action »,
-#          et un bouton pour la télécharger.
+a_traiter = selection[selection["statut"] != "valide"].copy()
+
+a_traiter["action"] = a_traiter["statut"].map({
+    "invalide": "Demander un nouveau numéro au client",
+    "non_tranche": "Revérifier sur VIES avant la prochaine facture",
+})
+
+colonnes = ["raison_sociale", "numero_saisi", "pays_declare", "statut", "motif", "action"]
+st.write(f"{len(a_traiter)} numéros demandent une action.")
+st.dataframe(a_traiter[colonnes], hide_index=True)
+
+st.download_button(
+    "Télécharger la liste",
+    a_traiter[colonnes].to_csv(index=False, sep=";").encode("utf-8-sig"),
+    file_name="numeros_a_traiter.csv",
+)
 
 # Déjà écrit : les données brutes, cachées par défaut.
 with st.expander("Voir toutes les données"):
