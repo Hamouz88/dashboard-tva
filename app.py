@@ -69,6 +69,22 @@ if canal:
 selection = selection[selection["date_saisie"].dt.date.between(debut, fin)]
 
 # =============================================================================
+# ÉTAPE 6 — Rendre la page lisible par tous (à faire APRÈS l'étape 5)
+# =============================================================================
+st.title("Qualité du référentiel TVA")
+st.write(
+    "Ce tableau de bord suit la validité des numéros de TVA intracommunautaires du référentiel clients. "
+    "Utilisez les filtres dans la barre latérale à gauche pour cibler un pays, un canal de saisie ou une période : "
+    "tous les indicateurs, graphiques et la liste exportable se mettent à jour automatiquement."
+)
+
+derniere = df["date_verification"].max()
+st.info(
+    f"Dernière vérification VIES : {derniere:%d/%m/%Y à %H:%M}. "
+    "Règle : un numéro non tranché ne doit pas être facturé hors taxe tant qu'il n'a pas été revérifié sur VIES."
+)
+
+# =============================================================================
 # ÉTAPE 1 — Les quatre chiffres clés
 # =============================================================================
 total = len(selection)
