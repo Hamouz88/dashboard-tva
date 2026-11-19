@@ -111,9 +111,33 @@ st.plotly_chart(fig)
 # ÉTAPE 4 — D'où viennent les erreurs ?
 # =============================================================================
 st.subheader("D'où viennent les erreurs ?")
-# TODO GRAPHIQUES (étape 4) : avec taux_invalides(selection, "source_saisie"), puis "pays_declare",
-#          deux graphiques en barres horizontales avec la valeur écrite sur chaque barre,
-#          puis une phrase (st.caption) qui explique quel canal sort du lot.
+taux_canal = taux_invalides(selection, "source_saisie")
+fig_canal = px.bar(
+    taux_canal,
+    x="taux d'erreur (%)",
+    y="source_saisie",
+    orientation="h",
+    text="taux d'erreur (%)",
+    title="Part de numéros invalides par canal de saisie",
+)
+st.plotly_chart(fig_canal)
+
+taux_pays = taux_invalides(selection, "pays_declare")
+fig_pays = px.bar(
+    taux_pays,
+    x="taux d'erreur (%)",
+    y="pays_declare",
+    orientation="h",
+    text="taux d'erreur (%)",
+    title="Part de numéros invalides par pays déclaré",
+)
+st.plotly_chart(fig_pays)
+
+st.caption(
+    "Le canal reprise_erp se distingue nettement avec près de 59 % de numéros invalides "
+    "(contre environ 43 % pour les autres canaux) : il correspond à la reprise de données "
+    "historiques depuis l'ancien ERP, importées sans contrôle de format ni vérification VIES."
+)
 
 # =============================================================================
 # ÉTAPE 5 — Les numéros à traiter
