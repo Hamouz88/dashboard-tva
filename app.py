@@ -291,3 +291,23 @@ with onglet_avance:
                 st.plotly_chart(fig_nt, use_container_width=True)
             else:
                 st.info("Aucun numéro non tranché dans la sélection actuelle.")
+
+    with st.container(border=True):
+        temps_box = selection.dropna(subset=["temps_reponse_ms"])
+        if not temps_box.empty:
+            fig_box = px.box(
+                temps_box,
+                x="pays_declare",
+                y="temps_reponse_ms",
+                title="Dispersion des temps de réponse VIES par pays (boîte à moustaches)",
+                color_discrete_sequence=["#4A7C9B"],
+            )
+            fig_box.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                xaxis_title="Pays déclaré",
+                yaxis_title="Temps de réponse (ms)",
+            )
+            st.plotly_chart(fig_box, use_container_width=True)
+        else:
+            st.info("Aucune donnée de temps de réponse pour afficher la boîte à moustaches.")
